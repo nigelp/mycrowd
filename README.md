@@ -1,3 +1,6 @@
+![mycrowdscreengrabsmall](https://github.com/user-attachments/assets/1acae698-b157-42af-a4e0-6205214bfdc1)
+
+
 # MyCrowd
 
 MyCrowd is a social media application that simulates interactions with AI-powered personas. Users can create posts and receive comments from various AI personalities. The application leverages local AI models through Ollama to generate dynamic and contextually appropriate responses.
