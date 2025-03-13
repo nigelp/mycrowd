@@ -3,7 +3,9 @@
 
 # MyCrowd
 
-MyCrowd is a Windows based social media application that simulates interactions with local AI-powered personas. Users can create posts and receive comments from various AI personalities. The application leverages local AI models through Ollama to generate dynamic and contextually appropriate responses. Users can also add their own system prompts to play with the characteristics of the conversations (e.g. 'talk like a pirate'). NOTE: This app was wholly created for fun using the CodeCompanion.ai 'vibe-coding' tool with Anthropic Claude 3.7 Sonnet and OpenRouter.ai. Plus a little help from o3-mini. :)
+MyCrowd is a fun Windows based social media app that simulates interactions with local AI-powered personas. Users can create posts and receive comments from various AI personalities. The application leverages local AI models through Ollama to generate dynamic and contextually appropriate responses. Users can also add their own system prompts to play with the characteristics of the conversations (e.g. 'talk like a pirate'). NOTE: This app was wholly created for fun using the CodeCompanion.ai 'vibe-coding' tool with Anthropic Claude 3.7 Sonnet and OpenRouter.ai. Plus a little help from o3-mini. :)
+
+Warning: performance is controlled by the power of your computer. Expect some response lag on most normal strength PCs. Feel free to experiment with different sized Ollama models and app settings to see if you can reduce lag while retaining quality responses. 
 
 ## Features
 
