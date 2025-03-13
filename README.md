@@ -3,7 +3,7 @@
 
 # MyCrowd
 
-MyCrowd is a social media application that simulates interactions with AI-powered personas. Users can create posts and receive comments from various AI personalities. The application leverages local AI models through Ollama to generate dynamic and contextually appropriate responses.
+MyCrowd is a Windows based social media application that simulates interactions with local AI-powered personas. Users can create posts and receive comments from various AI personalities. The application leverages local AI models through Ollama to generate dynamic and contextually appropriate responses. Users can also add their own system prompts to play with the characteristics of the conversations (e.g. 'talk like a pirate').
 
 ## Features
 
