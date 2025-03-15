@@ -1,11 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+import os
 
 a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[
+        ('templates', 'templates'),
+        ('static', 'static'),
+        ('anon_settings.json', '.'),
+        ('model_settings.json', '.'),
+        ('system_prompt.json', '.')
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
