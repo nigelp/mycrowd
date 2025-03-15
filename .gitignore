@@ -1,0 +1,30 @@
+# Build directories
+build/
+__pycache__/
+
+# Keep the dist/app directory for releases
+# dist/
+
+# Python cache
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+
+# Environment
+venv/
+env/
+.env/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
