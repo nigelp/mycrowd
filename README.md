@@ -28,7 +28,7 @@ Warning: performance is controlled by the power of your computer. Expect some re
 
 1. Clone the repository:
 ```
-git clone https://github.com/YOUR-USERNAME/MyCrowd.git
+git clone https://github.com/nigelp/mycrowd.git
 cd MyCrowd
 ```
 
