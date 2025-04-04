@@ -105,31 +105,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function fetchPosts(page = 1) {
         postFeed.innerHTML = '<div class="loading">Loading posts...</div>';
-        
+
         return fetch(`/api/posts/page/${page}`)
             .then(response => response.json())
             .then(data => {
                 const posts = data.posts;
                 totalPages = data.total_pages;
                 currentPage = data.current_page;
-                
-                // Update the allPosts array with the fetched posts
+
                 allPosts = posts;
-                
+
                 postFeed.innerHTML = '';
                 if (posts.length === 0) {
                     postFeed.innerHTML = '<div class="loading">No posts yet. Be the first to post!</div>';
                     return;
                 }
-                
+
                 posts.forEach(post => {
                     postFeed.innerHTML += createPostHTML(post);
                 });
-                
-                // Add pagination controls
+
                 addPaginationControls();
-                
-                // Add event listeners for like buttons
+
                 document.querySelectorAll('.like-button').forEach(button => {
                     button.addEventListener('click', function() {
                         const postId = this.getAttribute('data-post-id');
@@ -137,8 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         likeCount.textContent = parseInt(likeCount.textContent) + 1;
                     });
                 });
-                
-                // Add event listeners for thread toggle buttons
+
                 document.querySelectorAll('.thread-toggle').forEach(button => {
                     button.addEventListener('click', function() {
                         const postId = this.getAttribute('data-post-id');
@@ -155,8 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 });
-                
-                // Add event listeners for comment submit buttons
+
                 document.querySelectorAll('.comment-submit').forEach(button => {
                     button.addEventListener('click', function() {
                         const postId = this.getAttribute('data-post-id');
@@ -173,8 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 });
-                
-                // Add event listeners for comment input fields (to submit on Enter key)
+
                 document.querySelectorAll('.comment-input').forEach(input => {
                     input.addEventListener('keypress', function(e) {
                         if (e.key === 'Enter') {
@@ -194,7 +188,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 });
-                
+
+                document.querySelectorAll('.thread-toggle').forEach(toggle => {
+                    const postId = toggle.getAttribute('data-post-id');
+                    const commentsCount = document.querySelectorAll(`#post-${postId} .post-comments .comment`).length;
+                    toggle.setAttribute('data-comments-count', commentsCount);
+                    toggle.textContent = `💬 ${commentsCount} ▼`;
+                });
+
                 return posts;
             })
             .catch(error => {
@@ -206,48 +207,40 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function createPost() {
         const content = postContent.value.trim();
-        
+
         if (!content) {
             alert('Please enter some content for your post');
             return;
         }
-        
-        // Disable button and show loading state
+
         postButton.disabled = true;
         postButton.textContent = 'Posting...';
-        
+
         fetch('/api/posts', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content })
         })
         .then(response => response.json())
         .then(post => {
-            // Clear the textarea
             postContent.value = '';
-            
-            // Re-enable button
             postButton.disabled = false;
             postButton.textContent = 'Post';
-            
-            // Show a message that AI is responding
-            const aiRespondingMessage = document.createElement('div');
-            aiRespondingMessage.className = 'loading';
-            aiRespondingMessage.textContent = 'AI friends are responding...';
-            postFeed.insertBefore(aiRespondingMessage, postFeed.firstChild);
-            
-            // Fetch updated posts after a short delay to allow AI to respond
-            setTimeout(() => {
-                fetchPosts();
-            }, 2000);
+
+            fetchPosts().then(() => {
+                // Open the comments thread immediately
+                const thread = document.querySelector(`#post-${post.id} .post-comments`);
+                const toggleButton = document.querySelector(`.thread-toggle[data-post-id="${post.id}"]`);
+                if (thread && toggleButton) {
+                    thread.style.display = 'block';
+                    const commentsCount = toggleButton.getAttribute('data-comments-count');
+                    toggleButton.textContent = `💬 ${commentsCount} ▲`;
+                }
+            });
         })
         .catch(error => {
             console.error('Error creating post:', error);
             alert('Failed to create post. Please try again.');
-            
-            // Re-enable button
             postButton.disabled = false;
             postButton.textContent = 'Post';
         });
@@ -592,5 +585,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const header = document.querySelector('header');
     if (header) {
         header.appendChild(saveButton);
+    }
+    
+    // Minimal function to call streaming endpoint and append persona response as it arrives
+    async function streamPersonaResponse(promptText, textElement) {
+        textElement.innerHTML = '';
+        const response = await fetch('/api/stream_generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: promptText })
+        });
+
+        if (!response.body) {
+            textElement.innerHTML = 'No response body';
+            return;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value);
+            textElement.innerHTML += chunk;
+        }
     }
 });
